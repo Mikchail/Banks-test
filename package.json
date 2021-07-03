@@ -41,7 +41,11 @@
     "sequelize": "6.2.2",
     "sequelize-typescript": "2.1.0",
     "swagger-ui-express": "^4.1.6",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "@nestjs/platform-fastify": "7.6.15",
+    "fastify-static": "4.2.2",
+    "handlebars": "4.7.7",
+    "point-of-view": "4.15.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^7.5.1",

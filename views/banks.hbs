@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>App</title>
+</head>
+
+<body>
+  {{ message }}
+
+  <div style="width: 500px;">
+    <form style="display: flex;flex-direction: column">
+      <label>
+        Title
+        <input name="title" type="text">
+      </label>
+      <label>
+        Limit
+        <input name="limit" type="number">
+      </label>
+      <button data-add-bank>Submit</button>
+    </form>
+  </div>
+</body>
+
+<script>
+  document.querySelector("[data-add-bank]").addEventListener("click", (e) => {
+    e.preventDefault();
+    const form = e.target.parentNode;
+    const obj = {}
+    const data = new FormData(form);
+    data.forEach((val, key) => {
+      obj[key] = val
+    });
+    const test = fetch("/banks", {
+      method: "POST",
+      mode: "cors",
+      body: JSON.stringify(obj),
+    })
+    console.log(test)
+  })
+</script>
+
+</html>

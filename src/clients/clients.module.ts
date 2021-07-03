@@ -12,6 +12,6 @@ import { Bank } from 'src/banks/banks.model';
   imports: [
     SequelizeModule.forFeature([Client,CreditOffer,Bank])
   ],
-  exports: []
+  exports: [ClientsService]
 })
 export class ClientsModule {}
