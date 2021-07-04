@@ -15,4 +15,8 @@ export class CreditsService {
   async getAllCredits() {
     return await this.creditRepository.findAll();
   }
+
+  async getCreditsByBank(bankId: number) {
+    return await this.creditRepository.findAll({ where: { bankId } });
+  }
 }

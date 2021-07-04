@@ -7,6 +7,7 @@ interface ClientCreationAttrs {
   name: string;
   phone: string;
   passportNumber: number;
+  bankId: number;
 }
 
 @Table({ tableName: "clients" })

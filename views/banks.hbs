@@ -7,25 +7,226 @@
 </head>
 
 <body>
-  {{ message }}
+  <div style="display: flex;">
+    <div class="left" style="margin-right: 150px;">
+      <div style="width: 300px;">
+        <form method="POST" style="display: flex;flex-direction: column">
+          <h3>Banks</h3>
+          <label>
+            Title
+            <input name="title" type="text">
+          </label>
+          <label>
+            Limit
+            <input name="limit" type="number">
+          </label>
+          <button data-add-bank>Submit</button>
+        </form>
+      </div>
 
-  <div style="width: 500px;">
-    <form style="display: flex;flex-direction: column">
-      <label>
-        Title
-        <input name="title" type="text">
-      </label>
-      <label>
-        Limit
-        <input name="limit" type="number">
-      </label>
-      <button data-add-bank>Submit</button>
-    </form>
+
+      <div style="width: 300px;">
+        <h3>client</h3>
+        <form method="POST" style="display: flex;flex-direction: column">
+          <label>
+            Name
+            <input name="name" type="text">
+          </label>
+          <label>
+            email
+            <input name="email" type="text">
+          </label>
+          <label>
+            phone
+            <input name="phone" type="text">
+          </label>
+          <label>
+            passport
+            <input name="passportNumber" type="number">
+          </label>
+          <label>
+            bankId
+            <input name="bankId" type="number">
+          </label>
+          <button data-add-client>Submit</button>
+        </form>
+      </div>
+      <div style="width: 300px;">
+        <h3>Credit</h3>
+        <form method="POST" style="display: flex;flex-direction: column">
+          <label>
+            title
+            <input name="title" type="text">
+          </label>
+          <label>
+            limit
+            <input name="limit" type="number">
+          </label>
+          <label>
+            percent
+            <input name="percent" type="number">
+          </label>
+          <label>
+            bankId
+            <input name="bankId" type="number">
+          </label>
+          <button data-add-credit>Submit</button>
+        </form>
+      </div>
+    </div>
+    <div class="right">
+
+      <select name="" id="" data-select-bank>
+        <option value=""></option>
+        {{#each banks}}
+        <option value="{{this.dataValues.id}}">{{this.dataValues.title}}</option>
+        {{/each}}
+      </select>
+
+      <h4>credit</h4>
+      <div id="credit">
+      </div>
+      <h4>clients</h4>
+      <div id="clients">
+      </div>
+      <div style="width: 300px;">
+        <h3>CreditOffer</h3>
+        <form method="POST" style="display: flex;flex-direction: column">
+          <label>
+            title
+            <input name="title" type="text">
+          </label>
+          <label>
+            amount
+            <input name="amount" type="number">
+          </label>
+          <label>
+            firstPay
+            <input name="firstPay" type="date">
+          </label>
+          <label>
+            percentSum
+            <input name="percentSum" type="number">
+          </label>
+          <label>
+            periodInMonths
+            <input name="periodInMonths" type="number">
+          </label>
+          <button data-add-credit-offer>Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
   </div>
 </body>
 
 <script>
+  const globalData = {}
+  document.querySelector("[data-add-credit-offer]").addEventListener("click", (e) => {
+    e.preventDefault();
+    if (!globalData["clientId"] ||
+      !globalData["creditId"]) {
+      console.log(globalData)
+      return;
+    }
+    const form = e.target.parentNode;
+    let obj = {}
+    const data = new FormData(form);
+    data.forEach((val, key) => {
+      obj[key] = val
+    });
+   // obj["firstPay"] = new Date(obj["firstPay"]).getTime()
+    obj = { ...obj, ...globalData }
+    const test = fetch("/credit-offer", {
+      method: "POST",
+      mode: "cors",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(obj),
+    })
+  })
+
+
+  const creditId = document.querySelector("#credit");
+  const clientsId = document.querySelector("#clients");
+
+  async function getItemByBank(endpoint) {
+    const bank = await fetch(endpoint, {
+      method: "GET",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+    })
+    return bank
+  }
+
+  function createHtmlForCredit(res) {
+    creditId.innerHTML = ""
+    const select = document.createElement("select");
+    const option = document.createElement("option")
+    select.append(option)
+    res.forEach(element => {
+      const option = document.createElement("option")
+      option.textContent = element.title
+      option.value = element.id
+      select.append(option)
+    })
+    creditId.append(select);
+  }
+
+
+  function createHtmlForClients(res) {
+    clientsId.innerHTML = ""
+    const select = document.createElement("select");
+    const option = document.createElement("option")
+    select.append(option)
+    res.forEach(element => {
+      const option = document.createElement("option")
+      option.textContent = element.name
+      option.value = element.id
+      select.append(option)
+    })
+    clientsId.append(select);
+  }
+
+  clientsId.addEventListener("change", (e) => {
+    globalData["clientId"] = e.target.value
+  })
+
+  creditId.addEventListener("change", (e) => {
+    globalData["creditId"] = e.target.value
+  })
+
+  document.querySelector("[data-select-bank]").addEventListener("change", function (e) {
+
+    e.preventDefault();
+
+    if (e.target.value === "") {
+      return;
+    }
+    globalData["bankId"] = e.target.value
+    getItemByBank("/credits/" + e.target.value).then(res => res.json()).then((res) => createHtmlForCredit(res));
+    getItemByBank("/clients/" + e.target.value).then(res => res.json()).then((res) => createHtmlForClients(res));
+  })
+
   document.querySelector("[data-add-bank]").addEventListener("click", (e) => {
+    e.preventDefault();
+    const form = e.target.parentNode;
+    const obj = {}
+    const data = new FormData(form);
+    data.forEach((val, key) => {
+      obj[key] = val;
+    });
+    const test = fetch("/banks", {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(obj),
+    })
+  });
+  document.querySelector("[data-add-client]").addEventListener("click", (e) => {
     e.preventDefault();
     const form = e.target.parentNode;
     const obj = {}
@@ -33,13 +234,33 @@
     data.forEach((val, key) => {
       obj[key] = val
     });
-    const test = fetch("/banks", {
+    const test = fetch("/clients", {
       method: "POST",
       mode: "cors",
+      headers: {
+        'Content-Type': 'application/json'
+      },
       body: JSON.stringify(obj),
     })
-    console.log(test)
-  })
+  });
+  document.querySelector("[data-add-credit]").addEventListener("click", (e) => {
+    e.preventDefault();
+    const form = e.target.parentNode;
+    const obj = {}
+    const data = new FormData(form);
+    data.forEach((val, key) => {
+      obj[key] = val
+    });
+    const test = fetch("/credits", {
+      method: "POST",
+      mode: "cors",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(obj),
+    })
+
+  });
 </script>
 
 </html>

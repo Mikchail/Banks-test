@@ -9,7 +9,14 @@ export class BanksService {
     constructor(@InjectModel(Bank) private bankRepository: typeof Bank) { }
 
     async saveBank(dto: CreateBankDto) {
-        return await this.bankRepository.create(dto);
+        console.log("BanksService", dto);
+        
+        try {
+            return await this.bankRepository.create(dto);
+        } catch (error) {
+            console.log(error);
+        }
+        
     }
 
     async getBank(id: string) {
@@ -25,6 +32,7 @@ export class BanksService {
     }
 
     async getAllBanks() {
-        return await this.bankRepository.findAll();
+         const banks = await this.bankRepository.findAll();
+         return banks;
     }
 }

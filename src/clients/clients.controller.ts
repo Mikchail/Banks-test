@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Render } from '@nestjs/common';
 import { ClientsService } from './clients.service';
 import { CreateClientDto } from './dto/create-client-dto';
 
@@ -14,7 +14,13 @@ export class ClientsController {
   }
 
   @Get()
+  @Render('clients.hbs')
   getAll() {
       return this.clientService.getAllClients();
+  }
+
+  @Get("/:id")
+  getClientsByBank(@Param("id") id: number) {
+    return this.clientService.getClientsByBank(id);
   }
 }

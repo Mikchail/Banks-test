@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>App</title>
+</head>
+
+<body>
+  {{ message }}
+
+  <div style="width: 300px;">
+    <form method="POST" style="display: flex;flex-direction: column">
+      <label>
+        Name
+        <input name="name" type="text">
+      </label>
+      <label>
+        email
+        <input name="email" type="text">
+      </label>
+      <label>
+        phone
+        <input name="phone" type="text">
+      </label>
+      <label>
+        passport
+        <input name="passportNumber" type="number">
+      </label>
+      <label>
+        bankId
+        <input name="bankId" type="number">
+      </label>
+      <button data-add-client>Submit</button>
+    </form>
+  </div>
+</body>
+
+<script>
+  document.querySelector("[data-add-client]").addEventListener("click", (e) => {
+    e.preventDefault();
+    const form = e.target.parentNode;
+    const obj = {}
+    const data = new FormData(form);
+    data.forEach((val, key) => {
+      obj[key] = val
+    });
+    const test = fetch("/clients", {
+      method: "POST",
+      mode: "cors",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(obj),
+    })
+  })
+</script>
+
+</html>

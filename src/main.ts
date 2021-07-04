@@ -1,4 +1,4 @@
-import {NestFactory} from "@nestjs/core";
+import { NestFactory } from "@nestjs/core";
 import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify";
 import { join } from "path";
 import { AppModule } from "./app.module";
@@ -10,11 +10,6 @@ async function start() {
     AppModule,
     new FastifyAdapter(),
   );
-  app.enableCors({
-    origin: true,
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-    credentials: true,
-  });
 
   app.useStaticAssets({
     root: join(__dirname, '..', 'public'),
@@ -27,7 +22,7 @@ async function start() {
     templates: join(__dirname, '..', 'views'),
   });
   await app.listen(PORT, () => console.log(`Server start port: ${PORT}`));
-  
+
 }
 
 start()

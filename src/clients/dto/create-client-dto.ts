@@ -3,4 +3,5 @@ export class CreateClientDto {
   readonly name: string;
   readonly phone: string;
   readonly passportNumber: number;
+  readonly bankId: number;
 }

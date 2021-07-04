@@ -14,6 +14,7 @@ export class BanksController {
 
   @Post()
   saveBank(@Body() dto: CreateBankDto) {
+    console.log("BanksController", dto);
     return this.banksService.saveBank(dto);
   }
 
@@ -29,10 +30,12 @@ export class BanksController {
 
   @Get()
   @Render('banks.hbs')
-  getAllBanks() {
-    const banks = this.banksService.getAllBanks();
+  async getAllBanks() {
+    const banks = await this.banksService.getAllBanks();
     const clients = this.clientsService.getAllClients();
     const credits = this.creditsService.getAllCredits();
-    return { message: 'Hello world!' };
+    console.log(banks);
+    
+    return { banks };
   }
 }

@@ -11,7 +11,12 @@ export class ClientsService {
   async createClient(dto: CreateClientDto) {
     return await this.clientRepository.create(dto);
   }
+
   async getAllClients() {
     return await this.clientRepository.findAll();
+  }
+
+  async getClientsByBank(bankId: number) {
+    return await this.clientRepository.findAll({ where: { bankId } });
   }
 }

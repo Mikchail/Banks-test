@@ -11,7 +11,7 @@ interface CreditOfferCreationAttrs {
   title: string;
   amount: number;
   periodInMonths: number;
-  firstPay: number;
+  firstPay: Date;
   percentSum: number;
   bankId: number;
   creditId: number;
@@ -33,8 +33,8 @@ export class CreditOffer extends Model<CreditOffer,CreditOfferCreationAttrs> {
   @Column({ type: DataType.INTEGER, allowNull: false })
   periodInMonths: number;
 
-  @Column({ type: DataType.INTEGER, allowNull: true })
-  firstPay: number;
+  @Column({ type: DataType.DATE, allowNull: true })
+  firstPay: Date;
 
   @Column({ type: DataType.INTEGER, allowNull: true })
   percentSum: number;
